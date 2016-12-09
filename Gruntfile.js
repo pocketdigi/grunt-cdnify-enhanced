@@ -1,75 +1,53 @@
 /*
-  grunt-cdnify
-  https://github.com/callumlocke/grunt-cdnify
+ grunt-cdnify
+ https://github.com/callumlocke/grunt-cdnify
 
-  Copyright 2013 Callum Locke
-  Licensed under the MIT license.
-*/
+ Copyright 2013 Callum Locke
+ Licensed under the MIT license.
+ */
 
 'use strict';
 
-module.exports = function(grunt) {
-  grunt.initConfig({
+module.exports = function (grunt) {
+    grunt.initConfig({
 
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc'
-      },
-      files: {
-        src: [
-          'tasks/*.js',
-          'Gruntfile.js',
-          '<%= nodeunit.tests %>'
-        ]
-      }
-    },
-
-    clean: {
-      tests: 'test/output'
-    },
-
-    nodeunit: {
-      tests: 'test/cdnify_test.js'
-    },
-
-    cdnify: {
-      options: {
-        base: '//cdn.example.com/stuff/'
-      },
-      defaultOptions: {
-        files: {
-          'test/output/sample.css': 'test/fixtures/sample.css',
-          'test/output/sample.html': 'test/fixtures/sample.html'
-        }
-      },
-      customOptions: {
-        options: {
-          html: {
-            'img[truffles]': 'truffles',
-            'img[ng-src]': 'ng-src',
-            'img[src]': false,
-            'img[data-src]': false
-          }
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
+            files: {
+                src: [
+                    'tasks/*.js',
+                    'Gruntfile.js',
+                ]
+            }
         },
-        files: {
-          'test/output/sample-custom-options.html': 'test/fixtures/sample.html'
-        }
-      }
-    },
 
-    watch: {
-      all: {
-        files: ['tasks/*.js', 'test/*.js'],
-        tasks: ['test']
-      }
-    }
+        clean: {
+            tests: 'dist'
+        },
+        cdnify: {
+            dist: {
+                options: {
+                    base: '//ddlwechat.oss-cn-hangzhou.aliyuncs.com/loam/',
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'src',
+                    src: '**/*.{css,html}',
+                    dest: 'dist'
+                }]
+            }
+        },
 
-  });
 
-  grunt.loadTasks('tasks');
-  require('load-grunt-tasks')(grunt);
 
-  grunt.registerTask('test', ['clean', 'jshint', 'cdnify', 'nodeunit']);
+    });
 
-  grunt.registerTask('default', ['watch']);
+    grunt.loadTasks('tasks');
+    require('load-grunt-tasks')(grunt);
+
+    grunt.registerTask('test', ['clean', 'cdnify']);
+
+    grunt.registerTask('default', ['watch']);
 };
